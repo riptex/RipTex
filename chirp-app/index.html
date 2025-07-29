@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chirp Button</title>
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0;
+    font-family: Arial, sans-serif;
+  }
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  svg {
+    width: 200px;
+    height: 200px;
+  }
+</style>
+</head>
+<body>
+<button id="chirpButton" aria-label="Chirp button">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- face -->
+    <circle cx="100" cy="80" r="60" fill="#3d2b1f" />
+    <!-- hair -->
+    <path d="M40 60 q60 -40 120 0 v20 h-120z" fill="#1b110b" />
+    <!-- smile -->
+    <path d="M70 100 q30 30 60 0" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" />
+    <!-- eyes -->
+    <circle cx="75" cy="80" r="7" fill="#fff" />
+    <circle cx="125" cy="80" r="7" fill="#fff" />
+    <circle cx="75" cy="80" r="3" fill="#000" />
+    <circle cx="125" cy="80" r="3" fill="#000" />
+    <!-- hand (thinking pose) -->
+    <path d="M60 140 q40 20 80 0" fill="#3d2b1f" />
+    <rect x="60" y="120" width="80" height="30" fill="#3d2b1f" />
+  </svg>
+</button>
+<script>
+  const button = document.getElementById('chirpButton');
+  let audioCtx;
+  function chirp() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    function playBeep(time) {
+      const oscillator = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(3000, audioCtx.currentTime);
+      oscillator.connect(gain);
+      gain.connect(audioCtx.destination);
+      oscillator.start(time);
+      oscillator.stop(time + 0.15);
+    }
+    const now = audioCtx.currentTime;
+    playBeep(now);
+    playBeep(now + 0.5);
+  }
+  button.addEventListener('click', chirp);
+</script>
+</body>
+</html>
